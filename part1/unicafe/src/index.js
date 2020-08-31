@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
-const Statistic = ({ title, value }) => <h5>{title} {value}</h5>
+const Statistic = ({ title, value }) => (
+  <tr>
+    <td>{title}</td>
+    <td>{value}</td>
+  </tr>
+)
 
 const Statistics = ({ good, neutral, bad }) => {
   const findTotal = () => {
@@ -20,16 +25,16 @@ const Statistics = ({ good, neutral, bad }) => {
       <h3>No feedback given</h3>
     )
   }
-  
+
   return (
-    <>
+    <table>
       <Statistic title={"Good"} value={good} />
       <Statistic title={"Neutral"} value={neutral} />
       <Statistic title={"Bad"} value={bad} />
       <Statistic title={"Total Votes"} value={findTotal()} />
       <Statistic title={"Average"} value={findAverage() || 0} />
       <Statistic title={"Positive"} value={findPositive() || 0} />
-    </>
+    </ table>
   )
 }
 
