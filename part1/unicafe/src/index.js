@@ -28,12 +28,14 @@ const Statistics = ({ good, neutral, bad }) => {
 
   return (
     <table>
-      <Statistic title={"Good"} value={good} />
-      <Statistic title={"Neutral"} value={neutral} />
-      <Statistic title={"Bad"} value={bad} />
-      <Statistic title={"Total Votes"} value={findTotal()} />
-      <Statistic title={"Average"} value={findAverage() || 0} />
-      <Statistic title={"Positive"} value={findPositive() || 0} />
+      <tbody>
+        <Statistic title={"Good"} value={good} />
+        <Statistic title={"Neutral"} value={neutral} />
+        <Statistic title={"Bad"} value={bad} />
+        <Statistic title={"Total Votes"} value={findTotal()} />
+        <Statistic title={"Average"} value={findAverage() || 0} />
+        <Statistic title={"Positive"} value={findPositive() || 0} />
+      </tbody>
     </ table>
   )
 }
