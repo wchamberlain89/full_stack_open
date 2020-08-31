@@ -11,18 +11,28 @@ const Anecdote = ({ anecdote, votes, onUpvote }) => {
   )
 }
 
+const TopAnecdote = ({ anecdote }) => {
+  return (
+    <>
+      <h3>Anecdote with the most votes</h3>
+      <p>{anecdote}</p>
+    </>
+  )
+}
+
 const App = (props) => {
   const { anecdotes } = props;
   const [selected, setSelected] = useState(0);
-  const [result, setResult] = useState(0);
-  const [upvotes, setupvotes] = useState({});
+  const [upvotes, setupvotes] = useState(new Array(anecdotes.length).fill(0));
   
   const upvote = (id) => {
-    setupvotes({ ...upvotes, [id]: upvotes[id] + 1  || 1 })
+    const copy = [...upvotes];
+    copy[selected] += 1;
+    setupvotes(copy);
   }
 
   const random = (max) => {
-    let randomNumber = Math.floor((Math.random() * max))
+    let randomNumber = Math.floor((Math.random() * max));
     return randomNumber;
   }
 
@@ -30,10 +40,16 @@ const App = (props) => {
     setSelected(random(anecdotes.length));
   }
 
+  const getTopAnecdote = () => {
+    const result = upvotes.indexOf(Math.max(...upvotes));
+    return result;
+  }
+
   return (
     <div>
       <Anecdote anecdote={anecdotes[selected]} onUpvote={() => upvote(selected)} votes={upvotes[selected]}/>
-      <button onClick={() => {handleClick()}}>Next </button> 
+      <button onClick={() => {handleClick()}}>Next </button>
+      <TopAnecdote anecdote={anecdotes[getTopAnecdote()]}/>
     </div>
   )
 }
