@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-const Header = ({ course }) => {
+const Header = ({ title }) => {
   return (
-    <h1>{course}</h1>
+    <h1>{title}</h1>
   )
 }
 const Content = ({ parts }) => {
@@ -44,8 +44,9 @@ const Total = ({ parts }) => {
 }
 
 const App = () => {
-    const course = 'Half Stack application development'
-    const parts = [{
+    const course = {
+      title: 'Half Stack application development',
+      parts :  [{
       name: 'Fundamentals of React',
       exercises: 10
     }, {
@@ -55,12 +56,13 @@ const App = () => {
       name: 'State of a component',
       exercises: 14
     }]
+  }
 
   return (
     <div>
-      <Header course={course}/>
-      <Content parts={parts} />
-      <Total parts={parts} />
+      <Header title={course.title}/>
+      <Content parts={course.parts} />
+      <Total parts={course.parts} />
     </div>
   )
 }
