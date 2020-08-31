@@ -14,6 +14,13 @@ const Statistics = ({ good, neutral, bad }) => {
   const findPositive = () => {
     return good / findTotal();
   }
+
+  if (findTotal() === 0) {
+    return (
+      <h3>No feedback given</h3>
+    )
+  }
+  
   return (
     <>
       <Statistic title={"Good"} value={good} />
