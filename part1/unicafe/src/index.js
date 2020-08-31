@@ -7,6 +7,18 @@ const App = () => {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
 
+  const findTotal = () => {
+    return good + neutral + bad;
+  }
+
+  const findAverage = () => {
+    return good - bad / findTotal();
+  }
+
+  const findPositive = () => {
+    return good / findTotal();
+  }
+
   return (
     <>
       <h2>Give FeedBack</h2>
@@ -17,6 +29,10 @@ const App = () => {
       <Statistic title={"Good"} value={good} />
       <Statistic title={"Neutral"} value={neutral} />
       <Statistic title={"Bad"} value={bad} />
+      <Statistic title={"Total Votes"} value={findTotal()} />
+      <Statistic title={"Average"} value={findAverage() || 0} />
+      <Statistic title={"Positive"} value={findPositive() || 0} />
+
     </>
   )
 }
