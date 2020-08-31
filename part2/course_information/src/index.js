@@ -23,12 +23,11 @@ const Part = ({ part }) => {
 }
 const Total = ({ parts }) => {
   const getTotal = () => {
-    let total = 0; 
-    parts.forEach(part => {
-      total += part.exercises;
-    });
-    return total;
+    return parts.reduce((acc, part) => {
+      return acc += part.exercises
+    }, 0);
   }
+
   return (
   <p>Total Number of exercises: {getTotal()}</p>
   )
