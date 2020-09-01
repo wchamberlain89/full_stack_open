@@ -5,6 +5,7 @@ import Countries from './Countries';
 const App = () => {
   const [countries, setCountries] = React.useState([]);
   const [filter, setFilter] = React.useState('');
+  const filteredCountries = countries.filter(country => country.name.toLowerCase().includes(filter.toLowerCase()));
 
   React.useEffect(() => {
     axios
@@ -14,8 +15,6 @@ const App = () => {
     });
   }, []);
 
-  console.log(countries)
-
   const updateFilter = (event) => {
     setFilter(event.target.value)
   }
@@ -23,8 +22,7 @@ const App = () => {
   return (
     <>
       <input type="text" onChange={updateFilter}/>
-      {filter}
-      <Countries filter={filter} countries={countries} />
+      <Countries filter={filter} countries={filteredCountries} />
     </>
   )
 }
