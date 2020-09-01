@@ -23,7 +23,7 @@ const CreateForm = ({ onSubmit }) => {
           <label>
             number: 
           </label>
-          <input name="phoneNumber" onChange={handleChange} />
+          <input name="number" onChange={handleChange} />
         </div>
         <div>
           <button type="submit">add</button>
