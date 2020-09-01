@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom';
 import CreateForm from './CreateForm';
-
+import axios from 'axios';
 
 const PhoneNumbers = ({ filter, entries }) => {
   let filtered = entries.filter(entry => entry.name.toLowerCase().includes(filter.toLowerCase()))
@@ -9,7 +9,7 @@ const PhoneNumbers = ({ filter, entries }) => {
     <>
       { filtered.map((entry, index) => {
         return (
-          <PhoneNumber key={entry.name} name={entry.name} phoneNumber={entry.phoneNumber}/>
+          <PhoneNumber key={entry.name} name={entry.name} phoneNumber={entry.number}/>
         ) 
       })}
     </>
@@ -35,15 +35,21 @@ const Filter = ({ onUpdateFilter }) => {
 }
 
 const App = () => {
-  const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas', phoneNumber: "971-444-4040" }
-  ]);
+  const [persons, setPersons] = useState([]);
+  React.useEffect(() => {
+    console.log("attempting request");
+    axios.get('http://localhost:3001/persons')
+    .then(res => {
+      console.log("Response Successful", res.data);
+      setPersons(res.data);
+    })
+  }, []);
   const [ filter, setFilter ] = useState('');
   const updateFilter = (event) => {
     setFilter(event.target.value);
   }
   const addPerson = (newPerson) => {
-    validateName(newPerson.name) && setPersons(persons.concat({ name: newPerson.name, phoneNumber: newPerson.phoneNumber }))
+    validateName(newPerson.name) && setPersons(persons.concat({ name: newPerson.name, number: newPerson.phoneNumber }))
   }
 
   const validateName = (name) => {
