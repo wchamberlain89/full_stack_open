@@ -3,24 +3,33 @@ import ReactDOM from 'react-dom';
 import CreateForm from './CreateForm';
 import personsService from './services/persons';
 
-const PhoneNumbers = ({ filter, entries }) => {
+const PhoneNumbers = ({ filter, entries, onRemovePerson }) => {
   let filtered = entries.filter(entry => entry.name.toLowerCase().includes(filter.toLowerCase()))
+
+  const removeNumber = (id) => {
+    if(window.confirm()){
+      personsService.remove(id);
+      onRemovePerson(id);
+    }
+  }
+
   return (
     <>
       { filtered.map((entry, index) => {
         return (
-          <PhoneNumber key={entry.name} name={entry.name} number={entry.number}/>
+          <PhoneNumber id={entry.id} name={entry.name} number={entry.number} onRemove={() => removeNumber(entry.id)}/>
         ) 
       })}
     </>
   )
 }
 
-const PhoneNumber = ({ name, number }) => {
+const PhoneNumber = ({ name, number, onRemove }) => {
   return (
     <>
       <h5>{name}</h5>
       <h5>{number}</h5>
+      <button onClick={onRemove}>Delete</button>
     </>
   )
 }
@@ -55,6 +64,10 @@ const App = () => {
     }
   }
 
+  const removePerson = (id) => {
+    setPersons(persons.filter(person => person.id !== id ));
+  }
+
   const validateName = (name) => {
     const duplicates = persons.filter( person => {
       return (
@@ -75,7 +88,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <CreateForm onSubmit={addPerson} />
       <h2>Numbers</h2>
-      <PhoneNumbers filter={filter} entries={persons} />
+      <PhoneNumbers filter={filter} onRemovePerson={removePerson} entries={persons} />
     </div>
   )
 }
