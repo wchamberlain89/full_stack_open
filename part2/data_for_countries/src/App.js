@@ -6,7 +6,7 @@ const App = () => {
   const [countries, setCountries] = React.useState([]);
   const [filter, setFilter] = React.useState('');
   const filteredCountries = countries.filter(country => country.name.toLowerCase().includes(filter.toLowerCase()));
-
+  console.log(process.env.REACT_APP_API_KEY);
   React.useEffect(() => {
     axios
     .get("https://restcountries.eu/rest/v2/all")
