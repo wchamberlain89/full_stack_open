@@ -25,10 +25,11 @@ const CreateForm = ({ onSubmit, onChange, onUpdateNumber }) => {
   )
 }
 
-const PhoneNumbers = ({ entries }) => {
+const PhoneNumbers = ({ filter, entries }) => {
+  let filtered = entries.filter(entry => entry.name.toLowerCase().includes(filter.toLowerCase()))
   return (
     <>
-      { entries.map((entry, index) => {
+      { filtered.map((entry, index) => {
         return (
           <>
           <h5 key={index}>{entry.name}</h5>
@@ -40,12 +41,24 @@ const PhoneNumbers = ({ entries }) => {
   )
 }
 
+const Filter = () => {
+  const [ filter, setFilter ] = useState('');
+  
+  return (
+    <>
+      <label>Filter By Name</label>      
+      <input type="text" onChange={(event) => setFilter(event.target.value)}/>
+    </>
+  )
+}
+
 const App = () => {
   const [ persons, setPersons ] = useState([
     { name: 'Arto Hellas', phoneNumber: "971-444-4040" }
   ])
   const [ newPerson, setNewPerson ] = useState({
   });
+  const [ filter, setFilter ] = useState('');
   
   const handleSubmit = () => {
     const isValid = validateName(newPerson);
@@ -55,6 +68,10 @@ const App = () => {
   const onChange = (event) => {
     setNewPerson({ ...newPerson, [event.target.name]: event.target.value });
     console.log(newPerson);
+  }
+
+  const updateFilter = ( event ) => {
+    setFilter(event.target.value);
   }
 
   const validateName = (name) => {
@@ -71,13 +88,17 @@ const App = () => {
       return validation.length < 1;
    }
 
+  
+
 
   return (
     <div>
+      <label>Filter by name</label>
+      <input type="text" onChange={updateFilter} />
       <h2>Phonebook</h2>
       <CreateForm onSubmit={handleSubmit} onChange={onChange} />
       <h2>Numbers</h2>
-      <PhoneNumbers entries={persons} />
+      <PhoneNumbers filter={filter} entries={persons} />
     </div>
   )
 }
