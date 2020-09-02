@@ -1,11 +1,19 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan')
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
+var path = require('path');
+
 app.use(express.json());
 morgan.token('body', (req, res) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
+app.use(express.static('build'))
+
 let persons = [{id: 0, name: "ward chamberlain", number: "971-404-7927"}, {id: 1, name: "Kayla Crumb", number: "971-404-8511"}]
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname + '/build/index.html'));
+})
 
 app.get("/api/persons", (req, res) => {
   res.json(persons)
@@ -50,7 +58,7 @@ app.post("/api/persons", (req, res) => {
 app.delete("/api/persons/:id", (req, res) => {
   const id = parseInt(req.params.id);
   persons = persons.filter(person => person.id !== id);
-  response.status(204).end()
+  res.status(204).end()
 })
 
 app.get("/info", (req, res) => {
