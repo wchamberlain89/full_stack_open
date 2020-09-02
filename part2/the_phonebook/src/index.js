@@ -58,9 +58,15 @@ const App = () => {
   }
   const addPerson = (newPerson) => {
     console.log(newPerson)
-    if (validateName(newPerson.name)) {
+    if (validateDuplicate(newPerson.name)) {
+      console.log("name is valid")
       personsService.create(newPerson)
       setPersons(persons.concat({ name: newPerson.name, number: newPerson.number }))
+    } else {
+      if(window.confirm(`${newPerson.name} already exist in the phonebook, would you like to replace the old one?`)) {
+        personsService.update(persons.filter(person => newPerson.name === person.name)[0].id, newPerson)
+        setPersons(persons.map(person => person.name === newPerson.name ? newPerson : person))  
+      }
     }
   }
 
@@ -68,16 +74,12 @@ const App = () => {
     setPersons(persons.filter(person => person.id !== id ));
   }
 
-  const validateName = (name) => {
+  const validateDuplicate = (name) => {
     const duplicates = persons.filter( person => {
       return (
         person.name === name
       ) 
     });
-
-    if(duplicates.length > 0) {
-      alert(`${name} is already added to the phonebook`);
-    }  
         
     return duplicates.length < 1;
   }
