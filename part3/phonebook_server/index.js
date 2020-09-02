@@ -1,7 +1,9 @@
 const express = require('express');
 const app = express();
+const morgan = require('morgan')
 const PORT = 3001;
-app.use(express.json())
+app.use(express.json());
+app.use(morgan('tiny'));
 let persons = [{id: 0, name: "ward chamberlain", number: "971-404-7927"}, {id: 1, name: "Kayla Crumb", number: "971-404-8511"}]
 
 app.get("/api/persons", (req, res) => {
