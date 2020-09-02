@@ -1,8 +1,10 @@
+require('dotenv').config()
 const express = require('express');
 const app = express();
 const morgan = require('morgan')
 const PORT = process.env.PORT || 3001;
 var path = require('path');
+const Entry = require('./models/entry');
 
 app.use(express.json());
 morgan.token('body', (req, res) => JSON.stringify(req.body))
@@ -16,7 +18,9 @@ app.get('/', (req, res) => {
 })
 
 app.get("/api/persons", (req, res) => {
-  res.json(persons)
+  Entry.find({}).then(entries => {
+    res.json(entries);
+  })
 })
 
 app.get("/api/persons/:id", (req, res) => {
