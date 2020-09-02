@@ -8,6 +8,10 @@ app.get("/api/persons", (req, res) => {
   res.json(persons)
 })
 
+app.get("/info", (req, res) => {
+  const date = new Date();
+  res.send(`<p>Phonebook has information for ${persons.length} people.</p><p>${date}</p>`);
+})
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`)
 });
