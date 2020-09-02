@@ -62,7 +62,7 @@ const App = () => {
       setPersons(persons.concat({ name: newPerson.name, number: newPerson.number }))
     } else {
       if(window.confirm(`${newPerson.name} already exist in the phonebook, would you like to replace the old one?`)) {
-        personsService.update(persons.filter(person => newPerson.name === person.name)[0].id, newPerson)
+        personsService.update(persons.filter(person => newPerson.name === person.name)[0]._id, newPerson)
         .then(
           setMessage(`Updated ${newPerson.name}`)
         )
