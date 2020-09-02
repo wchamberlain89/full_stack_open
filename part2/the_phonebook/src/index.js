@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import ReactDOM from 'react-dom';
 import CreateForm from './CreateForm';
 import personsService from './services/persons';
+import Notification from './Notification';
 
 const PhoneNumbers = ({ filter, entries, onRemovePerson }) => {
   let filtered = entries.filter(entry => entry.name.toLowerCase().includes(filter.toLowerCase()))
@@ -45,6 +46,7 @@ const Filter = ({ onUpdateFilter }) => {
 
 const App = () => {
   const [persons, setPersons] = useState([]);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   React.useEffect(() => {
     personsService.getAll().then( response => {
@@ -61,13 +63,26 @@ const App = () => {
     if (validateDuplicate(newPerson.name)) {
       console.log("name is valid")
       personsService.create(newPerson)
+      .then(
+        setMessage(`Added ${newPerson.name}`)
+      )
       setPersons(persons.concat({ name: newPerson.name, number: newPerson.number }))
     } else {
       if(window.confirm(`${newPerson.name} already exist in the phonebook, would you like to replace the old one?`)) {
         personsService.update(persons.filter(person => newPerson.name === person.name)[0].id, newPerson)
+        .then(
+          setMessage(`Updated ${newPerson.name}`)
+        )
         setPersons(persons.map(person => person.name === newPerson.name ? newPerson : person))  
       }
     }
+  }
+
+  const setMessage = (message) => {
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
   }
 
   const removePerson = (id) => {
@@ -86,7 +101,8 @@ const App = () => {
 
   return (
     <div>
-      <Filter onUpdateFilter={updateFilter} /> 
+      <Filter onUpdateFilter={updateFilter} />
+      <Notification message={errorMessage} /> 
       <h2>Phonebook</h2>
       <CreateForm onSubmit={addPerson} />
       <h2>Numbers</h2>
