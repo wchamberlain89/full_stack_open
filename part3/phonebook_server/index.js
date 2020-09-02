@@ -30,33 +30,26 @@ app.get("/api/persons/:id", (req, res) => {
 })
 
 app.post("/api/persons", (req, res) => {
-  const person = req.body;
-  if (!person.name) {
+  const body = req.body;
+  if (!body.name) {
     return res.status(400).json({ 
       error: 'name is missing' 
     })
   }
-  if (!person.number) {
+  if (!body.number) {
     return res.status(400).json({ 
       error: 'number is missing' 
     })
   }
-  const isDuplicate = persons.filter(p => p.name === person.name).length > 0;
-  
-  if (isDuplicate) {
-    return res.status(400).json({
-      error: 'Duplicate Entry'
-    })
-  }
-  const maxId = persons.length > 0
-    ? Math.max(...persons.map(n => n.id)) 
-    : 0
 
-  person.id = maxId + 1
-  
-  persons = persons.concat(person)
+  const person = new Entry({
+    name: body.name,
+    number: body.number
+  })
 
-  res.json(person)
+  person.save().then(savedPerson => {
+    res.json(savedPerson)
+  })
 })
 
 app.delete("/api/persons/:id", (req, res) => {
