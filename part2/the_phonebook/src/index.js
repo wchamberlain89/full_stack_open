@@ -7,18 +7,11 @@ import Notification from './Notification';
 const PhoneNumbers = ({ filter, entries, onRemovePerson }) => {
   let filtered = entries.filter(entry => entry.name.toLowerCase().includes(filter.toLowerCase()))
 
-  const removeNumber = (id) => {
-    if(window.confirm()){
-      personsService.remove(id);
-      onRemovePerson(id);
-    }
-  }
-
   return (
     <>
       { filtered.map((entry, index) => {
         return (
-          <PhoneNumber id={entry.id} name={entry.name} number={entry.number} onRemove={() => removeNumber(entry.id)}/>
+          <PhoneNumber id={entry.id} name={entry.name} number={entry.number} onRemove={() => onRemovePerson(entry.id)}/>
         ) 
       })}
     </>
@@ -86,8 +79,16 @@ const App = () => {
   }
 
   const removePerson = (id) => {
-    setPersons(persons.filter(person => person.id !== id ));
-  }
+      if(window.confirm()){
+        personsService.remove(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id ));
+        })
+        .catch(error => {
+          setErrorMessage("Message cannot be deleted");
+        });
+      }
+    }
 
   const validateDuplicate = (name) => {
     const duplicates = persons.filter( person => {
