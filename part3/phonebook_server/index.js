@@ -1,40 +1,41 @@
 require('dotenv').config()
-const express = require('express');
-const app = express();
+const express = require('express')
+const app = express()
 const morgan = require('morgan')
-const PORT = process.env.PORT || 3001;
-var path = require('path');
-const Entry = require('./models/entry');
+const PORT = process.env.PORT || 3001
+var path = require('path')
+var __dirname = path.resolve()
+const Entry = require('./models/entry')
 
-app.use(express.json());
+app.use(express.json())
 morgan.token('body', (req, res) => JSON.stringify(req.body))
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(express.static('build'))
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname + '/build/index.html'));
+  res.sendFile(path.join(__dirname + '/build/index.html'))
 })
 
-app.get("/api/persons", (req, res) => {
+app.get('/api/persons', (req, res) => {
   Entry.find({}).then(entries => {
-    res.json(entries);
+    res.json(entries)
   })
 })
 
-app.get("/api/persons/:id", (req, res, next) => {
+app.get('/api/persons/:id', (req, res, next) => {
   Entry.findById(req.params.id).then(entry => {
     if (entry) {
-      res.json(entry) 
+      res.json(entry)
     } else {
       res.status(404).end()
     }
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
-app.post("/api/persons", (req, res, next) => {
-  const body = req.body;
-  
+app.post('/api/persons', (req, res, next) => {
+  const body = req.body
+
   const person = new Entry({
     name: body.name,
     number: body.number
@@ -43,37 +44,37 @@ app.post("/api/persons", (req, res, next) => {
   person.save().then(savedPerson => {
     res.json(savedPerson)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
-app.delete("/api/persons/:id", (req, res, next) => {
+app.delete('/api/persons/:id', (req, res, next) => {
   Entry.findByIdAndRemove(req.params.id)
-  .then(result => {
-    res.status(204).end()
-  })
-  .catch(error => next(error))
+    .then(() => {
+      res.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
   const body = req.body
-  
+
   const person = {
     name: body.name,
     number: body.number
   }
 
   Entry.findByIdAndUpdate(req.params.id, person, { new: true })
-  .then(updatedNote => {
-    Response.json(updatedNote)
-  })
-  .catch(error => next(error))
+    .then(updatedNote => {
+      res.json(updatedNote)
+    })
+    .catch(error => next(error))
 })
 
-app.get("/info", (req, res) => {
-  const date = new Date();
+app.get('/info', (req, res, next) => {
+  const date = new Date()
   Entry.find({}).then(entries => {
-    res.send(`<p>Phonebook has information for ${entries.length} people.</p><p>${date}</p>`);
-  }).catch(err => next(error))
+    res.send(`<p>Phonebook has information for ${entries.length} people.</p><p>${date}</p>`)
+  }).catch(err => next(err))
 })
 
 const errorHandler= (error, req, res, next) => {
