@@ -56,10 +56,13 @@ const App = () => {
     if (validateDuplicate(newPerson.name)) {
       console.log("name is valid")
       personsService.create(newPerson)
-      .then(
-        setMessage(`Added ${newPerson.name}`)
-      )
-      setPersons(persons.concat({ name: newPerson.name, number: newPerson.number }))
+      .then( res => {
+        setPersons(persons.concat({ name: newPerson.name, number: newPerson.number }))
+        setMessage(`Added ${res.name}`)
+      }).catch(error => {
+        setMessage(error.response.data.error );
+        console.log(error.response.data);
+      })
     } else {
       if(window.confirm(`${newPerson.name} already exist in the phonebook, would you like to replace the old one?`)) {
         personsService.update(persons.filter(person => newPerson.name === person.name)[0]._id, newPerson)

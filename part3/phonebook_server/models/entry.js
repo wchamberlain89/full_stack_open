@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+var uniqueValidator = require('mongoose-unique-validator');
 
 const url = process.env.MONGODB_URI
 mongoose.set('useFindAndModify', false)
@@ -13,9 +14,25 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
   })
 
 const entrySchema = new mongoose.Schema({
-  name: String,
-  number: String
+  name: {
+    type: String,
+    minlength: 3,
+    required: true,
+    unique: true
+  },
+  number: {
+    type: String,
+    validate: {
+      validator: function(v) {
+        return /\d{3}-\d{3}-\d{4}/.test(v);
+      },
+      message: props => `${props.value} is not a valid phone number!`
+    },
+    required: [true, 'User phone number required']
+  }
 })
+
+entrySchema.plugin(uniqueValidator);
 
 entrySchema.set('toJSON', {
   transform: (document, returnedObject) => {
