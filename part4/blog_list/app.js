@@ -9,7 +9,7 @@ const middlewear = require('./utils/middleware')
 
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
-    logger.info('connected to MongoDB')
+    logger.info('connected to MongoDB ++++++++++')
   })
   .catch((error) => {
     logger.error('error connecting to MongoDB', error.message)
