@@ -100,6 +100,38 @@ test('likes are added with default value of 0', async () => {
   expect(addedBlog.likes).toBe(0)
 })
 
+test('Title must be included with request body', async () => {
+  const newBlog =
+  {
+    author: 'Captain Usopp',
+    url: 'www.someurl.com',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+  const response = await api.get('/api/blogs')
+  expect(response.body).toHaveLength(initialBlogs.length)
+})
+
+test('Url must be included with request body', async () => {
+  const newBlog =
+  {
+    title: 'Blog without URL',
+    author: 'Captain Usopp'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+  const response = await api.get('/api/blogs')
+  expect(response.body).toHaveLength(initialBlogs.length)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
