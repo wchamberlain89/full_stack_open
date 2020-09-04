@@ -132,6 +132,29 @@ test('Url must be included with request body', async () => {
   expect(response.body).toHaveLength(initialBlogs.length)
 })
 
+describe('Deleting a blog', () => {
+  test('Succeeds with status code 204 if id is valid', async () => {
+    let allBlogs = await Blog.find({})
+    allBlogs = allBlogs.map(blog => blog.toJSON())
+    const blogToDelete = allBlogs[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+
+    const remainingBlogs = await Blog.find({})
+
+    expect(remainingBlogs).toHaveLength(initialBlogs.length - 1)
+
+    const ids = remainingBlogs.map(blog => {
+      blog = blog.toJSON()
+      return blog.id
+    })
+
+    expect(ids).not.toContain(blogToDelete.id)
+  })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
