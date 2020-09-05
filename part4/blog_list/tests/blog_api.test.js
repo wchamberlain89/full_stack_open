@@ -57,7 +57,6 @@ test('The first note to have a correct title', async () => {
 
 test('Returned blogs have id property', async () => {
   const response = await api.get('/api/blogs')
-  console.log('response is: ', response.body)
   expect(response.body[0].id).toBeDefined()
 })
 

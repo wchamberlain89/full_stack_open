@@ -8,7 +8,7 @@ const middlewear = require('./utils/middleware')
 const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
 
-mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
   .then(() => {
     logger.info('connected to MongoDB ++++++++++')
   })
