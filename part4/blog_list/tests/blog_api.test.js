@@ -3,6 +3,8 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blogs')
+const User = require('../models/users')
+const helpers = require('./test_helper')
 
 const initialBlogs = [
   {
@@ -171,6 +173,142 @@ describe('Updating a blog', () => {
 
     allBlogs = await Blog.find({})
     expect(allBlogs[0].likes).toBe(newData.likes)
+  })
+})
+
+//USER TESTS
+
+describe('when there is initially on user in the db', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+
+    const user = new User({ username: 'root-user', passwordHash: 'password', name: 'frankie' })
+
+    await user.save()
+  })
+
+  test('creation succeeds with a fresh username', async () => {
+    const startingBlogs = await helpers.usersInDb()
+    const newUser = {
+      username: 'reinhardt',
+      name: 'frankie',
+      passwordHash: 'something'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const endingBlogs = await helpers.usersInDb()
+    expect(endingBlogs).toHaveLength(startingBlogs.length + 1)
+
+    const userNames = endingBlogs.map(blog => blog.username)
+    expect(userNames).toContain(newUser.username)
+  })
+})
+
+describe('Adding invalid users', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+
+    const user = new User({ username: 'root-user', passwordHash: 'password', name: 'frankie' })
+
+    await user.save()
+  })
+
+  test('username cannot be undefined', async () => {
+    const startingUsers = await helpers.usersInDb()
+
+    const newUser = {
+      name: 'Frankie',
+      passwordHash: 'password',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const newUsers = await helpers.usersInDb()
+
+    expect(newUsers).toHaveLength(startingUsers.length)
+  })
+
+  test('passwordHash cannot be undefined', async () => {
+    const startingUsers = await helpers.usersInDb()
+
+    const newUser = {
+      name: 'Frankie',
+      username: 'BattleshipOfLove'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const newUsers = await helpers.usersInDb()
+
+    expect(newUsers).toHaveLength(startingUsers.length)
+  })
+
+  test('username must be at least 3 characters', async () => {
+    const startingUsers = await helpers.usersInDb()
+
+    const newUser = {
+      name: 'Frankie',
+      username: '01',
+      passwordHash: 'password'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const newUsers = await helpers.usersInDb()
+
+    expect(newUsers).toHaveLength(startingUsers.length)
+  })
+
+  test('password must be at least 3 characters', async () => {
+    const startingUsers = await helpers.usersInDb()
+
+    const newUser = {
+      name: 'Frankie',
+      username: '123',
+      passwordHash: 'pw'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const newUsers = await helpers.usersInDb()
+
+    expect(newUsers).toHaveLength(startingUsers.length)
+  })
+
+  test('username must be unique', async () => {
+    const startingUsers = await helpers.usersInDb()
+    console.log(startingUsers)
+    const newUser = {
+      name: 'Frankie',
+      username: 'root-user',
+      passwordHash: 'password'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const newUsers = await helpers.usersInDb()
+
+    expect(newUsers).toHaveLength(startingUsers.length)
   })
 })
 
