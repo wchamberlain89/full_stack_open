@@ -29,8 +29,15 @@ const initialBlogs = [
 
 beforeEach(async () => {
   await Blog.deleteMany({})
+  await User.deleteMany({})
+
+  const user = new User({ user: 'root-user', password: 'password', name: 'Frankie' })
 
   let blogObject = new Blog(initialBlogs[0])
+  console.log(blogObject)
+  // console.log("blog object is ", blogObject)
+  // blogObject.user = user._id
+  // console.log("blog object is ", blogObject)
   await blogObject.save()
 
   blogObject = new Blog(initialBlogs[1])
@@ -38,6 +45,8 @@ beforeEach(async () => {
 
   blogObject = new Blog(initialBlogs[2])
   await blogObject.save()
+
+  await user.save()
 })
 
 
@@ -182,7 +191,7 @@ describe('when there is initially on user in the db', () => {
   beforeEach(async () => {
     await User.deleteMany({})
 
-    const user = new User({ username: 'root-user', passwordHash: 'password', name: 'frankie' })
+    const user = new User({ username: 'root-user', password: 'password', name: 'frankie' })
 
     await user.save()
   })
@@ -192,7 +201,7 @@ describe('when there is initially on user in the db', () => {
     const newUser = {
       username: 'reinhardt',
       name: 'frankie',
-      passwordHash: 'something'
+      password: 'something'
     }
 
     await api
@@ -213,7 +222,7 @@ describe('Adding invalid users', () => {
   beforeEach(async () => {
     await User.deleteMany({})
 
-    const user = new User({ username: 'root-user', passwordHash: 'password', name: 'frankie' })
+    const user = new User({ username: 'root-user', password: 'password', name: 'frankie' })
 
     await user.save()
   })
@@ -223,7 +232,7 @@ describe('Adding invalid users', () => {
 
     const newUser = {
       name: 'Frankie',
-      passwordHash: 'password',
+      password: 'password',
     }
 
     await api
@@ -236,7 +245,7 @@ describe('Adding invalid users', () => {
     expect(newUsers).toHaveLength(startingUsers.length)
   })
 
-  test('passwordHash cannot be undefined', async () => {
+  test('password cannot be undefined', async () => {
     const startingUsers = await helpers.usersInDb()
 
     const newUser = {
@@ -260,7 +269,7 @@ describe('Adding invalid users', () => {
     const newUser = {
       name: 'Frankie',
       username: '01',
-      passwordHash: 'password'
+      password: 'password'
     }
 
     await api
@@ -279,7 +288,7 @@ describe('Adding invalid users', () => {
     const newUser = {
       name: 'Frankie',
       username: '123',
-      passwordHash: 'pw'
+      password: 'pw'
     }
 
     await api
@@ -298,7 +307,7 @@ describe('Adding invalid users', () => {
     const newUser = {
       name: 'Frankie',
       username: 'root-user',
-      passwordHash: 'password'
+      password: 'password'
     }
 
     await api
