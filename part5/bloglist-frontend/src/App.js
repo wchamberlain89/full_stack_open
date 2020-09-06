@@ -5,6 +5,7 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Toggleable from './components/Toggleable'
+import './styles.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
