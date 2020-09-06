@@ -3,10 +3,12 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -23,28 +25,46 @@ const App = () => {
   }, [])
 
   const addBlog = (newBlog) => {
+    setNotification('Successfully created new blog')
     setBlogs(blogs.concat(newBlog))
   }
 
   const logout = () => {
     window.localStorage.setItem('blogapp-user', JSON.stringify(user))
+    setNotification('Successfully Logged Out')
     setUser(null)
+  }
+
+  const setNotification = (message) => {
+    setMessage(message)
+    setTimeout(() => {
+      setMessage(null)
+    }, 3000)
   }
   
   return (
     <div>
+      <Notification message={message} />
       <h2>blogs</h2>
       {
         user ? 
         <>
           {user.username}
           <button onClick={logout}>Logout</button>
-          <BlogForm user={user} onSubmitSuccess={addBlog}/>
+          <BlogForm 
+            user={user} 
+            onSubmitSuccess={addBlog}
+            onError={(error) => {
+              console.log("error is ", error)
+              setNotification(error)
+            }}  
+          />
         </> :
         <LoginForm onSuccess={(user) => {
           window.localStorage.setItem(
             'blogapp-user', JSON.stringify(user)
           )
+          setNotification('Successfully logged in!')
           setUser(user)
         }}/>
       }

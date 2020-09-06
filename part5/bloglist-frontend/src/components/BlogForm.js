@@ -2,15 +2,17 @@ import React from 'react';
 import { useForm } from 'react-hook-form'
 import blogService from '../services/blogs'
 
-const BlogForm = ({ user, onSubmitSuccess }) => {
+const BlogForm = ({ user, onSubmitSuccess, onError }) => {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
     blogService.setToken(user.token)
 
     blogService.addBlog(data).then((response) => {
-      console.log(`succussfully added blog with ${JSON.stringify(response)}`)
+      console.log(response)
       onSubmitSuccess(response)
+    }).catch(error => {
+      onError && onError(error.response.data.error)
     })
   }
 
