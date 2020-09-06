@@ -14,10 +14,23 @@ const App = () => {
     )  
   }, [])
 
+  useEffect(() => {
+    const userJSON = window.localStorage.getItem('blogapp-user')
+    if (userJSON) {
+      const user = JSON.parse(userJSON)
+      setUser(user)
+    }
+  }, [])
+
   const addBlog = (newBlog) => {
     setBlogs(blogs.concat(newBlog))
   }
-  console.log(blogs)
+
+  const logout = () => {
+    window.localStorage.setItem('blogapp-user', JSON.stringify(user))
+    setUser(null)
+  }
+  
   return (
     <div>
       <h2>blogs</h2>
@@ -25,9 +38,15 @@ const App = () => {
         user ? 
         <>
           {user.username}
+          <button onClick={logout}>Logout</button>
           <BlogForm user={user} onSubmitSuccess={addBlog}/>
         </> :
-        <LoginForm onSuccess={(user) => setUser(user)} />
+        <LoginForm onSuccess={(user) => {
+          window.localStorage.setItem(
+            'blogapp-user', JSON.stringify(user)
+          )
+          setUser(user)
+        }}/>
       }
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
