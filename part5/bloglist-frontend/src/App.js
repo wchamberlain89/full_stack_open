@@ -4,6 +4,7 @@ import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import Toggleable from './components/Toggleable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -51,14 +52,16 @@ const App = () => {
         <>
           {user.username}
           <button onClick={logout}>Logout</button>
-          <BlogForm 
-            user={user} 
-            onSubmitSuccess={addBlog}
-            onError={(error) => {
-              console.log("error is ", error)
-              setNotification(error)
-            }}  
-          />
+          <Toggleable buttonLabel='New blog'>
+            <BlogForm 
+              user={user} 
+              onSubmitSuccess={addBlog}
+              onError={(error) => {
+                console.log("error is ", error)
+                setNotification(error)
+              }}
+            />
+          </Toggleable>
         </> :
         <LoginForm onSuccess={(user) => {
           window.localStorage.setItem(
