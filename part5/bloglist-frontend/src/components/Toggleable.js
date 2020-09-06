@@ -1,6 +1,9 @@
 import React from 'react';
+import { useImperativeHandle } from 'react';
 
-const Toggleable = ({ children, buttonLabel }) => {
+
+
+const Toggleable = React.forwardRef(({ children, buttonLabel }, ref) => {
   const [visible, setVisible] = React.useState(false)
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
@@ -9,6 +12,13 @@ const Toggleable = ({ children, buttonLabel }) => {
   const toggleVisibilty = () => {
     setVisible(!visible)
   }
+
+  useImperativeHandle(ref, () => {
+    return {
+      toggleVisibilty
+    }
+  })
+
   return (
     <div>
       <div style={hideWhenVisible}>
@@ -20,6 +30,6 @@ const Toggleable = ({ children, buttonLabel }) => {
       </div>
     </div>
   );
-};
+});
 
 export default Toggleable;

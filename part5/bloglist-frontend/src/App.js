@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
@@ -10,7 +10,7 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
-
+  const blogFormRef = useRef()
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -26,6 +26,8 @@ const App = () => {
   }, [])
 
   const addBlog = (newBlog) => {
+    console.log(blogFormRef.current)
+    blogFormRef.current.toggleVisibilty()
     setNotification('Successfully created new blog')
     setBlogs(blogs.concat(newBlog))
   }
@@ -52,7 +54,7 @@ const App = () => {
         <>
           {user.username}
           <button onClick={logout}>Logout</button>
-          <Toggleable buttonLabel='New blog'>
+          <Toggleable buttonLabel='New blog' ref={blogFormRef}>
             <BlogForm 
               user={user} 
               onSubmitSuccess={addBlog}
@@ -63,13 +65,16 @@ const App = () => {
             />
           </Toggleable>
         </> :
-        <LoginForm onSuccess={(user) => {
-          window.localStorage.setItem(
-            'blogapp-user', JSON.stringify(user)
-          )
-          setNotification('Successfully logged in!')
-          setUser(user)
-        }}/>
+        <Toggleable buttonLabel='Login'>
+          <LoginForm onSuccess={(user) => {
+            window.localStorage.setItem(
+              'blogapp-user', JSON.stringify(user)
+              )
+              setNotification('Successfully logged in!')
+              setUser(user)
+            }}
+          />
+        </Toggleable>
       }
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />

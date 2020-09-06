@@ -9,10 +9,11 @@ const BlogForm = ({ user, onSubmitSuccess, onError }) => {
     blogService.setToken(user.token)
 
     blogService.addBlog(data).then((response) => {
-      console.log(response)
+      console.log("response successful", response)
       onSubmitSuccess(response)
     }).catch(error => {
-      onError && onError(error.response.data.error)
+      console.log(error)
+      onError && onError(error.response)
     })
   }
 
