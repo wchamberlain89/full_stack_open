@@ -1,0 +1,34 @@
+import React from 'react';
+import { useForm } from 'react-hook-form'
+import blogService from '../services/blogs'
+
+const BlogForm = ({ user, onSubmitSuccess }) => {
+  const { register, handleSubmit } = useForm();
+
+  const onSubmit = (data) => {
+    blogService.setToken(user.token)
+
+    blogService.addBlog(data).then((response) => {
+      console.log(`succussfully added blog with ${JSON.stringify(response)}`)
+      onSubmitSuccess(response)
+    })
+  }
+
+  return (
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <label for='title'>Title</label>
+        <input
+          ref={register}
+          name='title'
+        />
+        <label for='title'>Url</label>
+        <input
+          ref={register}
+          name='url'
+        />
+        <button type="submit">save</button>
+      </form>
+    )
+};
+
+export default BlogForm;

@@ -4,6 +4,7 @@ const authRouter = require('express').Router()
 const User = require('../models/users')
 
 authRouter.post('/login', async (request, response) => {
+  console.log("ATTEMPTING TO LOGIN ~~~~~~~~")
   const body = request.body
 
   const user = await User.findOne({ username: body.username })

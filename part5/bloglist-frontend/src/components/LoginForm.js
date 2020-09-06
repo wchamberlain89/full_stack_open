@@ -1,16 +1,27 @@
 import React from 'react'
 import login from '../services/login'
+import blogService from '../services/blogs'
 
-function LoginForm(props) {
-  const [formState, setFormState] = React.useState()
+function LoginForm({ onSuccess }) {
+  const initialFormstate = {
+    username: '',
+    password: ''
+  }
+  const [formState, setFormState] = React.useState(initialFormstate)
 
   const onInputChange = ({ target }) => {
-    setFormState({ [target.name]: target.value })
+    setFormState({ ...formState, [target.name]: target.value })
+    console.log(formState)
   }
 
-  const onLogin = ({ username, password }) => {
+  const onLogin = async ({ username, password }) => {
+    console.log(username, password)
     try {
-      const user = await login({ username, password })
+      const response = await login({ username, password })
+      onSuccess && onSuccess(response)
+    } catch (error) {
+      setFormState(initialFormstate)
+      console.log(error)
     }
   }
 
@@ -19,9 +30,9 @@ function LoginForm(props) {
       event.preventDefault()
       onLogin(formState)
     }}>
-      <label for='name'>Username :</label>
+      <label htmlFor='name'>Username :</label>
       <input type='text' name="username" onChange={onInputChange}/>
-      <label for='password'>Password :</label>
+      <label htmlFor='password'>Password :</label>
       <input type='password' name="password" onChange={onInputChange}/>
       <button type='submit'>Login</button>
     </form>
