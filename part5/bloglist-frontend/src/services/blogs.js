@@ -21,4 +21,24 @@ const addBlog = async (data) => {
   return request.then(response => response.data)
 }
 
-export default { getAll, addBlog, setToken }
+const updateBlog = async (id, data) => {
+  try {
+    console.log("trying to updateBlog")
+    const response = axios.put(`${baseUrl}/${id}`, data)
+    return response
+  } catch(exception) {
+    console.log(exception)
+  }
+}
+
+const removeBlog = async (id) => {
+  try {
+    console.log(`Attempting to delete blog with blog id ${id}`)
+    const response = axios.delete(`${baseUrl}/${id}`, { headers : { Authorization: token } })
+    return response
+  } catch (exception) {
+    console.log(exception)
+  }
+}
+
+export default { getAll, addBlog, setToken, updateBlog, removeBlog }

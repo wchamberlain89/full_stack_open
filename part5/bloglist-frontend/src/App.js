@@ -33,6 +33,17 @@ const App = () => {
     setBlogs(blogs.concat(newBlog))
   }
 
+  const updateBlog = (updatedBlog) => {
+    console.log(updatedBlog)
+    const updatedBlogs = blogs.map(blog => blog.id === updatedBlog.id ? updatedBlog : blog)
+    console.log(updatedBlogs)
+    setBlogs(updatedBlogs)
+  }
+
+  const deleteBlog = (id) => {
+    setBlogs(blogs.filter(blog => blog.id !== id))
+  } 
+
   const logout = () => {
     window.localStorage.setItem('blogapp-user', JSON.stringify(user))
     setNotification('Successfully Logged Out')
@@ -47,9 +58,10 @@ const App = () => {
   }
   
   return (
-    <div>
+    <div className="app__container">
       <Notification message={message} />
-      <h2>blogs</h2>
+      <div>
+      <h2 style={{"text-align": "center"}}>blogs</h2>
       {
         user ? 
         <>
@@ -77,9 +89,12 @@ const App = () => {
           />
         </Toggleable>
       }
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+      </div>
+      <div className="blogs__container">
+        {blogs.map(blog =>
+          <Blog key={blog.id} user={user} blog={blog} onDeleteBlog={deleteBlog} onUpdateSuccess={updateBlog} />
+        )}
+      </div>
     </div>
   )
 }

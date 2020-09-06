@@ -1,6 +1,5 @@
 import React from 'react'
 import login from '../services/login'
-import blogService from '../services/blogs'
 
 function LoginForm({ onSuccess }) {
   const initialFormstate = {
