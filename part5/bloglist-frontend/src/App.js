@@ -15,7 +15,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const App = () => {
 
   const deleteBlog = (id) => {
     setBlogs(blogs.filter(blog => blog.id !== id))
-  } 
+  }
 
   const logout = () => {
     window.localStorage.setItem('blogapp-user', JSON.stringify(user))
@@ -56,39 +56,39 @@ const App = () => {
       setMessage(null)
     }, 3000)
   }
-  
+
   return (
     <div className="app__container">
       <Notification message={message} />
       <div>
-      <h2 style={{"text-align": "center"}}>blogs</h2>
-      {
-        user ? 
-        <>
-          {user.username}
-          <button onClick={logout}>Logout</button>
-          <Toggleable buttonLabel='New blog' ref={blogFormRef}>
-            <BlogForm 
-              user={user} 
-              onSubmitSuccess={addBlog}
-              onError={(error) => {
-                console.log("error is ", error)
-                setNotification(error)
+        <h2 style={{ 'text-align': 'center' }}>blogs</h2>
+        {
+          user ?
+            <>
+              {user.username}
+              <button onClick={logout}>Logout</button>
+              <Toggleable buttonLabel='New blog' ref={blogFormRef}>
+                <BlogForm
+                  user={user}
+                  onSubmitSuccess={addBlog}
+                  onError={(error) => {
+                    console.log('error is ', error)
+                    setNotification(error)
+                  }}
+                />
+              </Toggleable>
+            </> :
+            <Toggleable buttonLabel='Login'>
+              <LoginForm onSuccess={(user) => {
+                window.localStorage.setItem(
+                  'blogapp-user', JSON.stringify(user)
+                )
+                setNotification('Successfully logged in!')
+                setUser(user)
               }}
-            />
-          </Toggleable>
-        </> :
-        <Toggleable buttonLabel='Login'>
-          <LoginForm onSuccess={(user) => {
-            window.localStorage.setItem(
-              'blogapp-user', JSON.stringify(user)
-              )
-              setNotification('Successfully logged in!')
-              setUser(user)
-            }}
-          />
-        </Toggleable>
-      }
+              />
+            </Toggleable>
+        }
       </div>
       <div className="blogs__container">
         {blogs.map(blog =>

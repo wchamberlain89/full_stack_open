@@ -23,7 +23,7 @@ const addBlog = async (data) => {
 
 const updateBlog = async (id, data) => {
   try {
-    console.log("trying to updateBlog")
+    console.log('trying to updateBlog')
     const response = axios.put(`${baseUrl}/${id}`, data)
     return response
   } catch(exception) {

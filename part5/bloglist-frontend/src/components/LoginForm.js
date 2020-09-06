@@ -35,7 +35,7 @@ function LoginForm({ onSuccess }) {
       <input type='password' name="password" onChange={onInputChange}/>
       <button type='submit'>Login</button>
     </form>
-  );
+  )
 }
 
-export default LoginForm;
+export default LoginForm

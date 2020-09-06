@@ -1,5 +1,5 @@
-import React from 'react';
-import { useImperativeHandle } from 'react';
+import React from 'react'
+import { useImperativeHandle } from 'react'
 
 
 
@@ -29,7 +29,9 @@ const Toggleable = React.forwardRef(({ children, buttonLabel }, ref) => {
         <button onClick={toggleVisibilty}>cancel</button>
       </div>
     </div>
-  );
-});
+  )
+})
 
-export default Toggleable;
+Toggleable.displayName = 'Togglable'
+
+export default Toggleable

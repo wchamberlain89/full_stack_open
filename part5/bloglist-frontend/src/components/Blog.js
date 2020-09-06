@@ -27,7 +27,7 @@ const Blog = ({ blog, onUpdateSuccess, onDeleteBlog, user }) => {
       </div>
       {
         showDetails &&
-        <div class="blog__blog-details">
+        <div className="blog__blog-details">
           <p>{blog.author}</p>
           <p>{blog.url}</p>
           <div className="likes">
