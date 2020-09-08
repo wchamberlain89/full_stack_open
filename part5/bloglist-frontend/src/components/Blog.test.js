@@ -1,6 +1,6 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import Blog from './Blog'
 
 describe('Blog component tests', () => {
@@ -26,6 +26,16 @@ describe('Blog component tests', () => {
   test('On render blog component will not show details', () => {
     const details = component.container.querySelector('.blog__blog-details')
 
+    expect(details).not.toBeInstanceOf(HTMLElement)
+
+  })
+
+  test('Shows Details when button is clicked', () => {
+    const button = component.container.querySelector('button')
+    
+    fireEvent.click(button)
+    
+    const details = component.container.querySelector('.blog__blog-details')
     expect(details).toBeInstanceOf(HTMLElement)
   })
 })
