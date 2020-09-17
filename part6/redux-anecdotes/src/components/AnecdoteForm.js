@@ -21,8 +21,7 @@ const AnecdoteForm = (handleSubmit) => {
     event.preventDefault()
     const newAnecdote = asObject(event.target.anecdote.value)
     event.target.anecdote.value = ''
-    const createdAnecdote = await anecdoteService.createAnecdote(newAnecdote)
-    dispatch(createAnecdote(createdAnecdote))
+    dispatch(createAnecdote(newAnecdote))
     dispatch(setMessage('Succussfully Created Anecdote'))
   }
 

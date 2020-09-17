@@ -26,7 +26,13 @@ const reducer = (state = initialState, action) => {
 
 //ACTION CREATORS////
 export const createAnecdote = (anecdote) => {
-  return { type: 'CREATE_ANECDOTE', data: anecdote }
+  return async (dispatch) => {
+    const createdAnecdote = await anecdoteService.createAnecdote(anecdote)
+    dispatch({
+      type: 'CREATE_ANECDOTE',
+      data: createdAnecdote
+    })
+  }
 }
 
 export const upvote = (id) => {
