@@ -22,10 +22,12 @@ const AnecdoteList = () => {
 
   const filteredAnecdotes = filterAnecdotes(filter)
 
+  const anecdotesToDisplay = () => filter ? filteredAnecdotes : anecdotes
+  
   return (
     <>
       <Filter />
-      {filteredAnecdotes.map(anecdote =>
+      {anecdotesToDisplay().map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
