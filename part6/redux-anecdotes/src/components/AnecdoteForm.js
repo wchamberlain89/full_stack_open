@@ -21,7 +21,7 @@ const AnecdoteForm = (handleSubmit) => {
     const newAnecdote = asObject(event.target.anecdote.value)
     event.target.anecdote.value = ''
     dispatch(createAnecdote(newAnecdote))
-    dispatch(setMessage('Succussfully Created Anecdote'))
+    dispatch(setMessage('Succussfully Created Anecdote', 5000))
   }
 
   return (

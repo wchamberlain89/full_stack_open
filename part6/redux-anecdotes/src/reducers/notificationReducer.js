@@ -17,9 +17,16 @@ export const clearMessage = () => ({
   type: 'CLEAR_MESSAGE'
 })
 
-export const setMessage = (message) => ({
-  type: 'SET_MESSAGE',
-  data: { message }
-}) 
+export const setMessage = (message, duration = 1000) => {
+  return async (dispatch) => {
+    setTimeout(() => {
+      dispatch(clearMessage())
+    }, duration)
+    dispatch({
+      type: 'SET_MESSAGE',
+      data: { message }
+    })
+  }
+}
 
 export default notificationReducer
