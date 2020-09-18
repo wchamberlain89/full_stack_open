@@ -17,12 +17,17 @@ const useField = (type) => {
 
 const useCountry = (name) => {
   const [country, setCountry] = useState(null)
+  const loaded = React.useRef(false)
 
   useEffect(() => {
-    axios.get(`https://restcountries.eu/rest/v2/name/${name}?fullText=true`)
-    .then(response => {
-      setCountry(response.data[0])
-    }).catch(err => setCountry({ error : err }))
+    if (loaded.current) {
+      axios.get(`https://restcountries.eu/rest/v2/name/${name}?fullText=true`)
+      .then(response => {
+        setCountry(response.data[0])
+      }).catch(err => setCountry({ error : err }))
+    } else {
+      loaded.current = true
+    }
   }, [name])
 
   return country
