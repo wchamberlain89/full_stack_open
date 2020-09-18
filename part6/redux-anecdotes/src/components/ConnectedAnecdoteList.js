@@ -4,11 +4,8 @@ import { upvote } from '../reducers/anecdoteReducer'
 import Filter from './Filter'
 
 const AnecdoteList = (props) => {
-  const { anecdotes, filter } = props
-
-  const vote = (id) => {
-    dispatch(upvote(id))
-  }
+  //State and Dispatch from Redux
+  const { anecdotes, filter, upvote } = props
 
   const filterAnecdotes = (filter) => {
     return anecdotes.filter(a => a.content.includes(filter) ? a : null)
@@ -28,7 +25,7 @@ const AnecdoteList = (props) => {
           </div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => upvote(anecdote.id)}>vote</button>
           </div>
         </div>
       )}
@@ -46,4 +43,4 @@ const mapStateToProps = (state) => ({
 })
 
 
-export default connect(mapStateToProps)(AnecdoteList);
+export default connect(mapStateToProps, mapDispatchToProps)(AnecdoteList);
