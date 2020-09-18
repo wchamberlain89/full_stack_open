@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { setFilter } from '../reducers/filterReducer'
 
 const styles = {
@@ -7,12 +7,12 @@ const styles = {
   margin: "15px 0"
 }
 
-const Filter = () => {
-  const dispatch = useDispatch()
+const Filter = (props) => {
+  const setFilter = props
   
   const handleChange = (event) => {
     const filterTerm = event.target.value
-    dispatch(setFilter(filterTerm))
+    setFilter(filterTerm)
   }
 
   return (
@@ -23,4 +23,8 @@ const Filter = () => {
   );
 };
 
-export default Filter;
+const mapDispatchToProps = {
+  setFilter
+}
+
+export default connect(null, mapDispatchToProps)(Filter);
