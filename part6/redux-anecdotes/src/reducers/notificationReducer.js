@@ -2,6 +2,8 @@ const initialState = {
   message: ''
 }
 
+let timerId;
+
 const notificationReducer = (state = initialState, action) => {
   switch(action.type) {
     case 'SET_MESSAGE':
@@ -19,7 +21,10 @@ export const clearMessage = () => ({
 
 export const setMessage = (message, duration = 1000) => {
   return async (dispatch) => {
-    setTimeout(() => {
+    if(timerId) {
+      clearTimeout(timerId)
+    }
+    timerId = setTimeout(() => {
       dispatch(clearMessage())
     }, duration)
     dispatch({

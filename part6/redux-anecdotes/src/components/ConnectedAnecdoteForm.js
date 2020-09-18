@@ -21,7 +21,7 @@ const AnecdoteForm = (props) => {
     const newAnecdote = asObject(event.target.anecdote.value)
     event.target.anecdote.value = ''
     createAnecdote(newAnecdote)
-    setMessage('Succussfully Created Anecdote', 5000)
+    setMessage(`Succussfully Created Anecdote ${newAnecdote.content}`, 2000)
   }
 
   return (
