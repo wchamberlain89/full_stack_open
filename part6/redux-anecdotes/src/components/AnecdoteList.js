@@ -12,10 +12,6 @@ const AnecdoteList = () => {
     dispatch(upvote(id))
   }
 
-  const sortByVotes = (anecdotes) => {
-    return anecdotes.sort((a, b) => b.votes - a.votes)
-  }
-
   const filterAnecdotes = (filter) => {
     return anecdotes.filter(a => a.content.includes(filter) ? a : null)
   }
