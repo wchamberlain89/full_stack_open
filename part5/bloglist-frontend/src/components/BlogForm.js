@@ -1,20 +1,13 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
-import blogService from '../services/blogs'
+import { createBlog } from '../redux/reducers/blogsReducer'
 
 const BlogForm = ({ user, onSubmitSuccess, onError }) => {
   const { register, handleSubmit } = useForm()
-
+  const dispatch = useDispatch()
   const onSubmit = (data) => {
-    blogService.setToken(user.token)
-
-    blogService.addBlog(data).then((response) => {
-      console.log('response successful', response)
-      onSubmitSuccess(response)
-    }).catch(error => {
-      console.log(error)
-      onError && onError(error.response)
-    })
+    dispatch(createBlog(data))
   }
 
   return (

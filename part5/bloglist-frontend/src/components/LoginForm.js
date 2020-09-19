@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import login from '../services/login'
 import { setNotification } from '../redux/reducers/notification'
-
+import { setUser } from '../redux/reducers/userReducer'
 function LoginForm({ onSuccess }) {
   const dispatch = useDispatch()
   const initialFormstate = {
@@ -21,6 +21,7 @@ function LoginForm({ onSuccess }) {
     try {
       const response = await login({ username, password })
       dispatch(setNotification('Successfully Logged In'))
+      dispatch(setUser(response))
       onSuccess && onSuccess(response)
     } catch (error) {
       setFormState(initialFormstate)

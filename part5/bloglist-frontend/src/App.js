@@ -1,24 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
-import blogService from './services/blogs'
+
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Toggleable from './components/Toggleable'
 import { setNotification } from './redux/reducers/notification'
+import { initBlogs } from './redux/reducers/blogsReducer'
+import { setUser } from './redux/reducers/userReducer'
 import './styles.css'
 
 const App = () => {
   const dispatch = useDispatch()
-  const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
+  const blogs = useSelector(state => state.blogs)
+  const user = useSelector(state => state.user)
   const blogFormRef = useRef()
+
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )
-  }, [])
+    dispatch(initBlogs())
+  }, [dispatch])
 
   useEffect(() => {
     const userJSON = window.localStorage.getItem('blogapp-user')
@@ -28,36 +29,11 @@ const App = () => {
     }
   }, [])
 
-  const addBlog = (newBlog) => {
-    console.log(blogFormRef.current)
-    blogFormRef.current.toggleVisibilty()
-    dispatch(setNotification('Successfully created new blog'))
-    setBlogs(blogs.concat(newBlog))
-  }
-
-  const updateBlog = (updatedBlog) => {
-    console.log(updatedBlog)
-    const updatedBlogs = blogs.map(blog => blog.id === updatedBlog.id ? updatedBlog : blog)
-    console.log(updatedBlogs)
-    setBlogs(updatedBlogs)
-  }
-
-  const deleteBlog = (id) => {
-    setBlogs(blogs.filter(blog => blog.id !== id))
-  }
-
   const logout = () => {
-    window.localStorage.setItem('blogapp-user', JSON.stringify(user))
+    window.localStorage.removeItem('blogapp-user')
     dispatch(setNotification('Successfully Logged Out'))
-    setUser(null)
+    dispatch(setUser(null))
   }
-
-  // const setNotification = (message) => {
-  //   setMessage(message)
-  //   setTimeout(() => {
-  //     setMessage(null)
-  //   }, 3000)
-  // }
 
   return (
     <div className="app__container">
@@ -72,7 +48,6 @@ const App = () => {
               <Toggleable buttonLabel='New blog' ref={blogFormRef}>
                 <BlogForm
                   user={user}
-                  onSubmitSuccess={addBlog}
                   onError={(error) => {
                     console.log('error is ', error)
                     setNotification(error)
@@ -93,8 +68,8 @@ const App = () => {
         }
       </div>
       <div className="blogs__container">
-        {blogs.map(blog =>
-          <Blog key={blog.id} user={user} blog={blog} onDeleteBlog={deleteBlog} onUpdateSuccess={updateBlog} />
+        {blogs && blogs.map(blog =>
+          <Blog key={blog.id} user={user} blog={blog} />
         )}
       </div>
     </div>

@@ -10,9 +10,7 @@ const notificationReducer = (state = initialState, action) => {
 }
 
 export const setNotification = (notification) => {
-  console.log('attempting to set notification with notification ', notification)
   return async (dispatch) => {
-    console.log('running')
     dispatch({
       type: 'SET_NOTIFICATION',
       data: { notification }
