@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Toggleable from './components/Toggleable'
+import { setNotification } from './redux/reducers/notification'
 import './styles.css'
 
 const App = () => {
+  const dispatch = useDispatch()
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [message, setMessage] = useState(null)
   const blogFormRef = useRef()
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -29,7 +31,7 @@ const App = () => {
   const addBlog = (newBlog) => {
     console.log(blogFormRef.current)
     blogFormRef.current.toggleVisibilty()
-    setNotification('Successfully created new blog')
+    dispatch(setNotification('Successfully created new blog'))
     setBlogs(blogs.concat(newBlog))
   }
 
@@ -46,20 +48,20 @@ const App = () => {
 
   const logout = () => {
     window.localStorage.setItem('blogapp-user', JSON.stringify(user))
-    setNotification('Successfully Logged Out')
+    dispatch(setNotification('Successfully Logged Out'))
     setUser(null)
   }
 
-  const setNotification = (message) => {
-    setMessage(message)
-    setTimeout(() => {
-      setMessage(null)
-    }, 3000)
-  }
+  // const setNotification = (message) => {
+  //   setMessage(message)
+  //   setTimeout(() => {
+  //     setMessage(null)
+  //   }, 3000)
+  // }
 
   return (
     <div className="app__container">
-      <Notification message={message} />
+      <Notification />
       <div>
         <h2 style={{ 'text-align': 'center' }}>blogs</h2>
         {
