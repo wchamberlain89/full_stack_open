@@ -8,6 +8,8 @@ const blogsReducer = (state = initialState, action) => {
     return [ ...action.data ]
   case 'CREATE_BLOG':
     return [ ...state, action.data ]
+  case 'DELETE_BLOG':
+    return state.filter(blog => blog.id === action.data.id ? null : blog)
   default:
     return state
   }
@@ -33,6 +35,16 @@ export const createBlog = (blog) => {
     dispatch({
       type: 'CREATE_BLOG',
       data: createdBlog
+    })
+  }
+}
+
+export const deleteBlog = (id) => {
+  return async (dispatch) => {
+    console.log('deleting blog')
+    dispatch({
+      type: 'DELETE_BLOG',
+      data: { id }
     })
   }
 }

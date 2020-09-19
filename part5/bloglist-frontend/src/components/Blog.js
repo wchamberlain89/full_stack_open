@@ -1,23 +1,10 @@
 import React from 'react'
-import blogService from '../services/blogs'
+import { useDispatch } from 'react-redux'
+import { deleteBlog } from '../redux/reducers/blogsReducer'
 
 const Blog = ({ blog, onUpdateSuccess, onDeleteBlog, user }) => {
   const [showDetails, setShowDetails] = React.useState()
-
-  const handleDeleteBlog = () => {
-    blogService.setToken(user.token)
-    blogService.removeBlog(blog.id)
-    onDeleteBlog && onDeleteBlog(blog.id)
-  }
-
-  const upvote = async () => {
-    try {
-      const response = await blogService.updateBlog(blog.id, { likes: blog.likes + 1 })
-      onUpdateSuccess && onUpdateSuccess(response.data)
-    } catch(exception) {
-      console.log(exception)
-    }
-  }
+  const dispatch = useDispatch()
 
   return (
     <div className="blog">
@@ -32,9 +19,9 @@ const Blog = ({ blog, onUpdateSuccess, onDeleteBlog, user }) => {
           <p>{blog.url}</p>
           <div className="likes">
             <p>{blog.likes}</p>
-            <button className="upvote-btn" onClick={upvote}>upvote</button>
+            <button className="upvote-btn">upvote</button>
           </div>
-          <button onClick={handleDeleteBlog}>Delete</button>
+          <button onClick={() => dispatch(deleteBlog(blog.id))}>Delete</button>
         </div>
       }
     </div>
