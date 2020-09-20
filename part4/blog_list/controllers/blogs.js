@@ -53,11 +53,13 @@ blogsRouter.post('/', async (request, response, next) => {
 })
 
 blogsRouter.put('/:id', async (request, response, next) => {
+  console.log('attempting to update blog')
   const id = request.params.id
   const body = request.body
 
   Blog.findByIdAndUpdate(id, body, { new: true })
     .then(updatedBlog => {
+      console.log(updatedBlog, 'updated blog')
       response.status(200).json(updatedBlog.toJSON())
     })
     .catch(error => next(error))

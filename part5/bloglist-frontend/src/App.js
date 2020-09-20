@@ -6,6 +6,7 @@ import Notification from './components/Notification'
 import Users from './components/Users'
 import Blogs from './components/Blogs'
 import Navigation from './components/Navigation'
+import BlogDetails from './components/BlogDetails'
 import { setNotification } from './redux/reducers/notification'
 import { initBlogs } from './redux/reducers/blogsReducer'
 import { setUser } from './redux/reducers/userReducer'
@@ -54,6 +55,9 @@ const App = () => {
             }}/>
           </>
         </Route>
+        <PrivateRoute path='/blogs/:id'>
+          <BlogDetails />
+        </PrivateRoute>
         <PrivateRoute path='/'>
           <Blogs />
         </PrivateRoute>

@@ -8,6 +8,8 @@ const blogsReducer = (state = initialState, action) => {
     return [ ...action.data ]
   case 'CREATE_BLOG':
     return [ ...state, action.data ]
+  case 'UPDATE_BLOG':
+    return state.map(blog => blog.id === action.data.id ? action.data : blog)
   case 'DELETE_BLOG':
     return state.filter(blog => blog.id === action.data.id ? null : blog)
   default:
@@ -45,6 +47,21 @@ export const deleteBlog = (id) => {
     dispatch({
       type: 'DELETE_BLOG',
       data: { id }
+    })
+  }
+}
+
+export const upvoteBlog = (id) => {
+  return async (dispatch, getState) => {
+    const blogs = [...getState().blogs]
+    const blogToUpdate = { ...blogs.filter(blog => blog.id === id)[0] }
+    blogToUpdate.likes += 1
+
+    blogService.updateBlog(blogToUpdate.id, { likes: blogToUpdate.likes })
+
+    dispatch({
+      type: 'UPDATE_BLOG',
+      data: blogToUpdate
     })
   }
 }
