@@ -29,7 +29,7 @@ export const initBlogs = () => {
 export const createBlog = (blog) => {
   return async (dispatch, getState) => {
     const { user } = getState()
-    console.log('user is ', user)
+    blog.author = user.name
     blogService.setToken(user.token)
     const createdBlog = await blogService.addBlog(blog)
     dispatch({

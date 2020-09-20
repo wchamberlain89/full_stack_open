@@ -1,10 +1,13 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import login from '../services/login'
 import { setNotification } from '../redux/reducers/notification'
 import { setUser } from '../redux/reducers/userReducer'
-function LoginForm({ onSuccess }) {
+function LoginForm() {
+  const history = useHistory()
   const dispatch = useDispatch()
+
   const initialFormstate = {
     username: '',
     password: ''
@@ -17,15 +20,15 @@ function LoginForm({ onSuccess }) {
   }
 
   const onLogin = async ({ username, password }) => {
-    console.log(username, password)
     try {
       const response = await login({ username, password })
       dispatch(setNotification('Successfully Logged In'))
       dispatch(setUser(response))
-      onSuccess && onSuccess(response)
     } catch (error) {
       setFormState(initialFormstate)
       console.log(error)
+    } finally {
+      history.push('/')
     }
   }
 
