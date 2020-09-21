@@ -21,6 +21,13 @@ const addBlog = async (data) => {
   return request.then(response => response.data)
 }
 
+const createBlogComment = (blogId, data) => {
+  console.log('data in service for blog-comment', data)
+  const request = axios.post(`${baseUrl}/${blogId}/comments`, data)
+  //This should be the new comment returned by the server
+  return request.then(response => response.data)
+}
+
 const updateBlog = async (id, data) => {
   try {
     console.log('trying to updateBlog')
@@ -41,4 +48,4 @@ const removeBlog = async (id) => {
   }
 }
 
-export default { getAll, addBlog, setToken, updateBlog, removeBlog }
+export default { getAll, addBlog, createBlogComment, setToken, updateBlog, removeBlog }
