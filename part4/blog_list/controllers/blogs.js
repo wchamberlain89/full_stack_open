@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blogs')
 const User = require('../models/users')
+const Comment = require('../models/comments')
 
 const getToken = request => {
   const authorization = request.get('authorization')
@@ -14,7 +15,11 @@ const getToken = request => {
 
 blogsRouter.get('/', async (request, response, next) => {
   try {
-    const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
+    const blogs = await Blog
+      .find({})
+      .populate('user', { username: 1, name: 1 })
+      .populate('comments')
+
     if (blogs) {
       response.status(200).json(blogs)
     }
@@ -88,6 +93,21 @@ blogsRouter.delete('/:id', async (request, response, next) => {
     } catch (exception) {
       next(exception)
     }
+  }
+})
+
+blogsRouter.post('/:blogId/comments', async (request, response, next) => {
+  const blogId = request.params.blogId
+  const comment = new Comment(request.body)
+
+  try {
+    const savedComment = await comment.save()
+    const blog = await Blog.findById(blogId)
+    blog.comments.unshift(savedComment)
+    blog.save()
+    response.status(200).json(savedComment)
+  } catch(exception) {
+    next(exception)
   }
 })
 

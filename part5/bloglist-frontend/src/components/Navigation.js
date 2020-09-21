@@ -5,6 +5,8 @@ const Navigation = () => {
     <div>
       <Link to='blogs'>Blogs</Link>
       <Link to='users'>Users</Link>
+
+      
     </div>
   )
 }
