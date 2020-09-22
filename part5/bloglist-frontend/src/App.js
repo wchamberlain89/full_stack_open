@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Route, Switch } from 'react-router-dom'
 import LoginForm from './components/LoginForm'
