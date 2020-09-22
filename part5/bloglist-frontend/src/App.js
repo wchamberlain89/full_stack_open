@@ -1,17 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link, Route, Switch } from 'react-router-dom'
-import LoginForm from './components/LoginForm'
-import Notification from './components/Notification'
-import Users from './components/Users'
+import { useDispatch } from 'react-redux'
+import { Route, Switch } from 'react-router-dom'
+import { setNotification } from './redux/reducers/notification'
+import { setUser } from './redux/reducers/userReducer'
 import Blogs from './components/Blogs'
+import Users from './components/Users'
 import Navigation from './components/Navigation'
 import BlogDetails from './components/BlogDetails'
-import { setNotification } from './redux/reducers/notification'
-import { initBlogs } from './redux/reducers/blogsReducer'
-import { setUser } from './redux/reducers/userReducer'
+import Notification from './components/Notification'
 import PrivateRoute from './components/PrivateRoute'
+import LoginPage from './components/LoginPage'
 
 import './styles.css'
 import UserDetails from './components/UserDetails'
@@ -36,8 +35,6 @@ const App = () => {
   return (
     <div className="app__container">
       <Notification />
-      <h1 style={{ 'textAlign': 'center' }}>BLOGGER</h1>
-      <Navigation />
       <Switch>
         <PrivateRoute path='/users/:id'>
           <UserDetails />
@@ -47,13 +44,7 @@ const App = () => {
         </PrivateRoute>
         <Route path='/login'>
           <>
-            <LoginForm onSuccess={(user) => {
-              window.localStorage.setItem(
-                'blogapp-user', JSON.stringify(user)
-              )
-              setNotification('Successfully logged in!')
-              setUser(user)
-            }}/>
+            <LoginPage />
           </>
         </Route>
         <PrivateRoute path='/blogs/:id'>
