@@ -1,15 +1,6 @@
 import React, { useEffect } from 'react'
-import { gql, useQuery } from '@apollo/client'
-
-const ALL_BOOKS = gql`
-  query allBooks {
-    allBooks {
-      title,
-      author,
-      published
-    }
-  }
-`
+import { useQuery } from '@apollo/client'
+import { ALL_BOOKS } from './queries'
 
 const Books = (props) => {
   const query = useQuery(ALL_BOOKS)
@@ -17,6 +8,7 @@ const Books = (props) => {
   
   useEffect(() => {
     if (query.data) {
+      console.log('fetching books')
       setBooks(query.data.allBooks)
     }
   }, [query])

@@ -119,7 +119,7 @@ const resolvers = {
     allBooks: (root, args) => {
       const { author } = args
       const { genre } = args
-
+      console.log('getting books')
       if(author) {
         return books.filter(book => book.author === author)
       }
@@ -136,7 +136,9 @@ const resolvers = {
   },
   Mutation: {
     addBook: (root, args) => {
+      console.log('Adding book')
       const book = { ...args, id: uuid() }
+      console.log('Adding book', book)
       
       books = books.concat(book)
       
