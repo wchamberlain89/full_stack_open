@@ -12,10 +12,11 @@ const schema = new mongoose.Schema({
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Author'
+    ref: 'Author',
+    autopopulate: true
   },
   genres: [
-    { type: String}
+    { type: String }
   ]
 })
 

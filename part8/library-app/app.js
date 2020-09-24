@@ -3,12 +3,13 @@ const { ApolloServer, gql } = require('apollo-server')
 const { v1: uuid } = require('uuid')
 const db = require('./db')
 const Book = require('./models/book')
+const Author = require('./models/author')
 
 const typeDefs = gql`
   type Book {
     title: String!
     published: Int!
-    author: String!
+    author: Author
     id: ID!
     genres: [String]!
   }
@@ -24,6 +25,7 @@ const typeDefs = gql`
   }
   type Query {
     allBooks(author: String, genre: String): [Book!]!
+    findBook(name: String!): Book
     bookCount: Int!
     authorCount: Int!
     allAuthors: [Author!]!
@@ -36,12 +38,12 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    allBooks: (root, args) => {
+    allBooks: async (root, args) => {
       const { author } = args
       const { genre } = args
       console.log('getting books')
-      const books = Book.find({})
-      console.log('books are ', books)
+      const books = await Book.find({}).populate('author')
+      console.log(books)
       if(author) {
         return books.filter(book => book.author === author)
       }
@@ -52,24 +54,31 @@ const resolvers = {
 
       return books
     },
-    allAuthors: () => authors,
-    bookCount: () => books.length,
-    authorCount: () => authors.length
+    allAuthors: () => Author.find({}),
+    bookCount: async () => await Book.find({}).length,
+    authorCount: () => Author.find({}).length,
+    findBook: async (name) => await Book.find({ name })
   },
   Mutation: {
-    addBook: (root, args) => {
-      console.log('Adding book')
-      const book = new Book({ ...args })
-      console.log('Adding book', book)
-      book.save()
+    addBook: async (root, { author, title, published, genres }) => {    
+      const book = new Book({ title: title, published: published, genres: genres })
       
-      const isNewAuthor = !authors.find(author => author.name === book.author)
-
-      if(isNewAuthor) {
-        authors = authors.concat({ name: book.author, id: uuid() })
+      let newAuthor = await Author.find({ name : author })
+      
+      if(newAuthor.length > 0) {
+        book.author = newAuthor[0]._id
+      } else {
+        newAuthor = new Author({ name: author })
+        console.log('saving author')
+        await newAuthor.save()
+        console.log('new author is ', newAuthor)
+        book.author = newAuthor._id
       }
 
-      return book
+      console.log("book before saving", book)
+
+      const savedBook = await book.save()
+      return await Book.populate(savedBook, { path: 'author' })
     },
     editAuthor: (root, args) => {
       const author = authors.find(author => author.name === args.name)
@@ -77,13 +86,22 @@ const resolvers = {
     }
   },
   Author: {
-    bookCount: (root) => books.filter(book => book.author === root.name).length || 0
+    bookCount: (root) => {
+      const book = Book.find({ author: { id : root.id } })
+      console.log(book)
+      books.filter(book => book.author === root.name).length || 0
+    }
   }
 }
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  playground: {
+    settings: {
+      'editor.theme': 'light'
+    }
+  }
 })
 
 server.listen().then(({ url }) => {
