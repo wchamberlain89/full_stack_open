@@ -25,7 +25,7 @@ const typeDefs = gql`
   }
   type Query {
     allBooks(author: String, genre: String): [Book!]!
-    findBook(name: String!): Book
+    findBook(title: String!): Book
     bookCount: Int!
     authorCount: Int!
     allAuthors: [Author!]!
@@ -55,9 +55,12 @@ const resolvers = {
       return books
     },
     allAuthors: () => Author.find({}),
-    bookCount: async () => await Book.find({}).length,
-    authorCount: () => Author.find({}).length,
-    findBook: async (name) => await Book.find({ name })
+    bookCount: async () => await Book.collection.countDocuments(),
+    authorCount: async () => await Author.collection.countDocuments(),
+    findBook: async (root, args) => {
+      const foundBook = await Book.find({ title: args.title }).populate('author')
+      return foundBook[0]
+    }
   },
   Mutation: {
     addBook: async (root, { author, title, published, genres }) => {    
@@ -69,13 +72,9 @@ const resolvers = {
         book.author = newAuthor[0]._id
       } else {
         newAuthor = new Author({ name: author })
-        console.log('saving author')
         await newAuthor.save()
-        console.log('new author is ', newAuthor)
         book.author = newAuthor._id
       }
-
-      console.log("book before saving", book)
 
       const savedBook = await book.save()
       return await Book.populate(savedBook, { path: 'author' })
