@@ -32,7 +32,7 @@ const typeDefs = gql`
   }
   type Mutation {
     addBook(title: String!, author: String!, published: Int!, genres: [String!]): Book
-    editAuthor(name: String!, params: EditAuthorParams): Author
+    editAuthor(id: ID!, params: EditAuthorParams): Author
   }
 `
 
@@ -79,13 +79,10 @@ const resolvers = {
       const savedBook = await book.save()
       return await Book.populate(savedBook, { path: 'author' })
     },
-    editAuthor: (root, args) => {
-      const author = authors.find(author => author.name === args.name)
-      return author ? { ...author, ...args.params } : null
-    }
+    editAuthor: async (root, args) => updatedBlog = await Author.findByIdAndUpdate(args.id, { ...args.params }, { new: true })
   },
   Author: {
-    bookCount: (root) => {
+    bookCount: (root) => {  
       const book = Book.find({ author: { id : root.id } })
       console.log(book)
       books.filter(book => book.author === root.name).length || 0
