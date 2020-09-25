@@ -82,10 +82,11 @@ const resolvers = {
     editAuthor: async (root, args) => updatedBlog = await Author.findByIdAndUpdate(args.id, { ...args.params }, { new: true })
   },
   Author: {
-    bookCount: (root) => {  
-      const book = Book.find({ author: { id : root.id } })
-      console.log(book)
-      books.filter(book => book.author === root.name).length || 0
+    bookCount: async (root) => {
+      console.log(root.id)
+      const result = await Book.find({ author: root.id })
+      console.log(result)
+      return result.length
     }
   }
 }
