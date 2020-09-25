@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, gql, UserInputError } = require('apollo-server')
 const { v1: uuid } = require('uuid')
 const db = require('./db')
 const Book = require('./models/book')
@@ -72,20 +72,42 @@ const resolvers = {
         book.author = newAuthor[0]._id
       } else {
         newAuthor = new Author({ name: author })
-        await newAuthor.save()
+        try {
+          await newAuthor.save()
+        } catch (error) {
+          throw new UserInputError(error.message, {
+            invalidArgs: { author, title, published, genres }
+          })
+        }
+
         book.author = newAuthor._id
       }
+      try {
+        const savedBook = await book.save()
+        return await Book.populate(savedBook, { path: 'author' })
+      } catch(error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: { author, title, published, genres }
+        })
+      }
 
-      const savedBook = await book.save()
-      return await Book.populate(savedBook, { path: 'author' })
     },
-    editAuthor: async (root, args) => updatedBlog = await Author.findByIdAndUpdate(args.id, { ...args.params }, { new: true })
-  },
+    editAuthor: async (root, args) => {
+      try {
+        const updatedAuthor = await Author.findByIdAndUpdate(args.id, { ...args.params }, { new: true, runValidators: true })
+        return updatedAuthor
+      } catch(error) {
+        console.log('throwing error', error)
+        throw new UserInputError(error, {
+          invalidArgs: args
+        })
+      }
+    }
+  }
+  ,
   Author: {
     bookCount: async (root) => {
-      console.log(root.id)
       const result = await Book.find({ author: root.id })
-      console.log(result)
       return result.length
     }
   }
