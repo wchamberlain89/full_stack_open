@@ -5,7 +5,7 @@ import { ALL_AUTHORS } from './queries'
 
 const Authors = (props) => {
   const authors = useQuery(ALL_AUTHORS)
-  console.log('logging authors ', authors)
+
   if (!props.show) {
     return null
   }

@@ -24,7 +24,7 @@ export const ALL_AUTHORS = gql`
 `
 
 export const ADD_BOOK = gql`
-  mutation ($title: String!, $author: String!, $published: Int!, $genres: [String!]) {
+  mutation ($title: String!, $author: String!, $published: Int!, $genres: [String]!) {
     addBook(
       title: $title,
       author: $author,

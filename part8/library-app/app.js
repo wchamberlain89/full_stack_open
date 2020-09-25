@@ -59,6 +59,7 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     allBooks: async (root, args) => {
+      console.log('fetching books')
       const { author } = args
       const { genre } = args
 
@@ -96,6 +97,7 @@ const resolvers = {
       return user
     },
     login: async (root, args) => {
+      console.log('Attempting to login')
       const user = await User.findOne({ username: args.username })
 
       if (!user || args.password !== 'bone') {
@@ -110,9 +112,10 @@ const resolvers = {
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
     },
     addBook: async (root, { author, title, published, genres }, context) => {
-      if(!context.currentUser) {
-        throw new AuthenticationError("You need to be logged in to perform this action")
-      }
+      console.log('adding book')
+      // if(!context.currentUser) {
+      //   throw new AuthenticationError("You need to be logged in to perform this action")
+      // }
 
       const book = new Book({ title: title, published: published, genres: genres })
       
@@ -172,9 +175,10 @@ const server = new ApolloServer({
         auth.substring(7), process.env.JWT_SECRET
       )
 
-      const currentUser = await User.findById(decodedToken.id) 
+      const currentUser = await User.findById(decodedToken.id)
       return { currentUser }
     }
+    console.log('ran context')
   },
   playground: {
     settings: {
