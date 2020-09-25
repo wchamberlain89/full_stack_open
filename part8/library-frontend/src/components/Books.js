@@ -5,6 +5,7 @@ import { ALL_BOOKS } from './queries'
 const Books = (props) => {
   const query = useQuery(ALL_BOOKS)
   const [books, setBooks] = React.useState([])
+  console.log(books)
   
   useEffect(() => {
     if (query.data) {
@@ -37,12 +38,14 @@ const Books = (props) => {
               published
             </th>
           </tr>
-          {books.map(a =>
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author}</td>
-              <td>{a.published}</td>
+          {books && books.map(book => {
+            {console.log(book.author)}
+            return <tr key={book.title}>
+              <td>{book.title}</td>
+              <td>{book.author && book.author.name}</td>
+              <td>{book.published}</td>
             </tr>
+          }
           )}
         </tbody>
       </table>

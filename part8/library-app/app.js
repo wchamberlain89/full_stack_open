@@ -113,7 +113,7 @@ const resolvers = {
       if(!context.currentUser) {
         throw new AuthenticationError("You need to be logged in to perform this action")
       }
-          
+
       const book = new Book({ title: title, published: published, genres: genres })
       
       let newAuthor = await Author.find({ name : author })
@@ -140,7 +140,6 @@ const resolvers = {
           invalidArgs: { author, title, published, genres }
         })
       }
-
     },
     editAuthor: async (root, args) => {
       try {
